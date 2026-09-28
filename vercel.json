@@ -2,7 +2,7 @@
   "buildCommand": "npm install",
   "installCommand": "npm install",
   "framework": null,
-  "nodeVersion": "20.x",
+  "nodeVersion": "24.x",
   "functions": {
     "api/**/*.js": {
       "maxDuration": 60
