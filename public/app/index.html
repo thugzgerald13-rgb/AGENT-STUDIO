@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Agent Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-slate-950 text-slate-100 h-screen flex flex-col overflow-hidden">
+
+<!-- Auth overlay (login / signup) -->
+<div id="authOverlay" class="hidden fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4">
+  <div class="w-full max-w-sm">
+    <div class="flex items-center gap-3 justify-center mb-6">
+      <div class="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#022c22" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6l-8-4z"/></svg>
+      </div>
+      <h1 class="text-2xl font-semibold tracking-tight">Agent Studio</h1>
+    </div>
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl p-6">
+      <div class="flex bg-slate-800 rounded-lg p-0.5 text-sm mb-5">
+        <button id="authTabLogin" class="flex-1 px-3 py-1.5 rounded-md font-medium bg-slate-700">Log in</button>
+        <button id="authTabSignup" class="flex-1 px-3 py-1.5 rounded-md font-medium text-slate-400">Sign up</button>
+      </div>
+      <div class="space-y-3">
+        <div id="authNameField" class="hidden">
+          <label class="block text-xs font-medium text-slate-400 mb-1">Name</label>
+          <input id="authName" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500" placeholder="Your name" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Email</label>
+          <input id="authEmail" type="email" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500" placeholder="you@example.com" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Password</label>
+          <input id="authPassword" type="password" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500" placeholder="Min. 6 characters" />
+          <div id="pwStrength" class="hidden mt-1.5 h-1 rounded bg-slate-700 overflow-hidden"><div id="pwStrengthBar" class="h-full transition-all duration-200" style="width:0%;background:#ef4444"></div></div>
+        </div>
+        <button id="authSubmit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold py-2.5 rounded-lg transition">Log in</button>
+        <button id="forgotLink" type="button" class="w-full text-center text-xs text-emerald-400 hover:text-emerald-300 mt-2">Forgot password?</button>
+        <div id="authError" class="hidden text-xs text-red-400 text-center"></div>
+      </div>
+      <p class="text-[11px] text-slate-500 text-center mt-4">Local dev account: <span class="font-mono">dev@local</span> / <span class="font-mono">dev1234</span> (Pro tier)</p>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="flex items-center justify-between px-4 py-3 border-b border-slate-800 bg-slate-900/60 shrink-0">
+  <div class="flex items-center gap-3">
+    <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#022c22" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6l-8-4z"/></svg>
+    </div>
+    <h1 class="text-lg font-semibold tracking-tight">Agent Studio</h1>
+    <span id="configStatus" class="text-xs px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">No API key</span>
+    <span id="quotaBadge" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700 hidden"></span>
+    <button id="upgradeBtn" class="hidden text-xs bg-emerald-500 text-slate-950 font-semibold px-3 py-1.5 rounded-lg hover:bg-emerald-400 transition">Upgrade to Pro</button>
+    <span id="userEmail" class="text-xs text-slate-400 hidden"></span>
+    <button id="logoutBtn" class="text-xs text-slate-400 hover:text-white px-2 py-1 rounded hover:bg-slate-800 hidden">Log out</button>
+  </div>
+  <div class="flex items-center gap-2">
+    <div class="flex bg-slate-800 rounded-lg p-0.5 text-sm">
+      <button id="tabChat" class="px-3 py-1.5 rounded-md font-medium transition">Chat</button>
+      <button id="tabCrew" class="px-3 py-1.5 rounded-md font-medium transition text-slate-400">Crew Run</button>
+    </div>
+    <a href="/docs" target="_blank" class="text-xs text-slate-400 hover:text-white px-2 py-1 rounded hover:bg-slate-800 hidden" id="docsLink">API Docs</a>
+    <button id="settingsBtn" title="Settings" class="p-2 rounded-lg hover:bg-slate-800 transition">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+  </div>
+</header>
+<div id="verifyBanner" class="hidden bg-amber-500/10 border-b border-amber-500/30 text-amber-200 text-xs px-4 py-2 flex items-center justify-between gap-2">
+  <span>Please verify your email address — check your inbox for a verification link.</span>
+  <button id="resendVerifyBtn" class="text-amber-300 hover:text-amber-100 underline flex-shrink-0">Resend email</button>
+</div>
+
+<!-- Body -->
+<div class="flex-1 flex min-h-0">
+
+  <!-- Sidebar -->
+  <aside class="w-64 border-r border-slate-800 bg-slate-900/40 flex flex-col shrink-0">
+    <div class="p-3 border-b border-slate-800">
+      <button id="newAgentBtn" class="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-sm py-2 rounded-lg transition">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        New Agent
+      </button>
+    </div>
+    <div class="px-3 pt-3 pb-1.5"><input id="sidebarSearch" type="text" placeholder="Search agents & chats…" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-emerald-500" /></div>
+    <div class="px-3 pt-1 pb-1 text-xs uppercase tracking-wider text-slate-500 font-semibold">Agents</div>
+    <div id="agentList" class="flex-1 overflow-y-auto px-2 pb-2 space-y-1 min-h-0"></div>
+    <div id="convSection" class="border-t border-slate-800 flex flex-col min-h-0">
+      <div class="px-3 pt-3 pb-1 text-xs uppercase tracking-wider text-slate-500 font-semibold flex items-center justify-between">
+        <span>Chats</span>
+        <button id="newChatBtn" class="text-emerald-400 hover:text-emerald-300 normal-case text-xs font-medium">+ New</button>
+      </div>
+      <div id="convList" class="overflow-y-auto px-2 pb-2 space-y-1 max-h-56"></div>
+    </div>
+  </aside>
+
+  <!-- Chat panel -->
+  <main id="chatPanel" class="flex-1 flex flex-col min-w-0">
+    <div id="chatHeader" class="px-5 py-3 border-b border-slate-800 flex items-center justify-between shrink-0">
+      <div>
+        <div id="chatAgentName" class="font-semibold">Select an agent</div>
+        <div id="chatAgentDesc" class="text-xs text-slate-500"></div>
+      </div>
+      <button id="exportConvBtn" class="text-sm text-slate-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 transition hidden">Export</button>
+      <button id="editAgentBtn" class="text-sm text-slate-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 transition">Edit agent</button>
+    </div>
+    <div id="messages" class="flex-1 overflow-y-auto px-5 py-4 space-y-4 min-h-0"></div>
+    <div class="border-t border-slate-800 p-4 shrink-0">
+      <div class="flex gap-2 max-w-3xl mx-auto">
+        <textarea id="chatInput" rows="1" placeholder="Message your agent..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm resize-none focus:outline-none focus:border-emerald-500"></textarea>
+        <button id="sendBtn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-5 rounded-xl transition disabled:opacity-40 disabled:cursor-not-allowed">Send</button>
+      </div>
+      <div class="text-center text-xs text-slate-600 mt-2">Press Enter to send, Shift+Enter for newline</div>
+    </div>
+  </main>
+
+  <!-- Crew panel -->
+  <main id="crewPanel" class="flex-1 hidden flex-col min-w-0 overflow-y-auto">
+    <div class="max-w-4xl mx-auto w-full px-6 py-6">
+      <h2 class="text-xl font-semibold mb-1">Crew Run</h2>
+      <p class="text-sm text-slate-400 mb-5">Pick multiple agents, set rounds, and watch them work the same task in sequence — each agent sees all previous responses.</p>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 mb-5">
+        <div class="text-xs uppercase tracking-wider text-slate-500 font-semibold mb-2">1. Select agents (in order)</div>
+        <div id="crewAgentPicker" class="flex flex-wrap gap-2 mb-4"></div>
+        <div class="flex items-center gap-4 mb-4">
+          <label class="text-sm text-slate-300 flex items-center gap-2">
+            Rounds
+            <input id="crewRounds" type="number" min="1" max="10" value="1" class="w-16 bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-center focus:outline-none focus:border-emerald-500" />
+          </label>
+          <span class="text-xs text-slate-500">Each round = every selected agent speaks once.</span>
+        </div>
+        <div class="text-xs uppercase tracking-wider text-slate-500 font-semibold mb-2">2. Task</div>
+        <textarea id="crewTask" rows="3" placeholder="e.g. Draft a launch plan for a new meditation app and critique it." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:border-emerald-500 mb-3"></textarea>
+        <button id="crewRunBtn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-5 py-2 rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed">Run crew</button>
+      </div>
+
+      <div id="crewOutput" class="space-y-3"></div>
+
+      <div class="mt-8">
+        <div class="text-xs uppercase tracking-wider text-slate-500 font-semibold mb-2">Past crew runs</div>
+        <div id="crewHistory" class="space-y-2"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Agent modal -->
+<div id="agentModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
+    <div class="flex items-center justify-between mb-4">
+      <h3 id="agentModalTitle" class="text-lg font-semibold">New Agent</h3>
+      <button class="modal-close text-slate-400 hover:text-white p-1" data-modal="agentModal">&times;</button>
+    </div>
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-1">Name</label>
+        <input id="agentName" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500" placeholder="e.g. Research Analyst" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-1">Short description</label>
+        <input id="agentDesc" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500" placeholder="One line shown in the sidebar" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-1">System prompt <span class="text-slate-500 font-normal">(defines the agent's behavior)</span></label>
+        <textarea id="agentSystem" rows="5" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500" placeholder="You are a ..."></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1">Model <span class="text-slate-500 font-normal">(blank = default)</span></label>
+          <input id="agentModel" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500" placeholder="gpt-4o-mini" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1">Temperature: <span id="tempVal" class="text-emerald-400">0.7</span></label>
+          <input id="agentTemp" type="range" min="0" max="2" step="0.1" value="0.7" class="w-full mt-2 accent-emerald-500" />
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center justify-between mt-6">
+      <button id="cloneAgentBtn" class="text-slate-300 hover:text-white text-sm font-medium hidden">Duplicate</button>
+      <button id="exportAgentBtn" class="text-slate-300 hover:text-white text-sm font-medium hidden">Export JSON</button>
+      <button id="exportAllAgentsBtn" class="text-slate-300 hover:text-white text-sm font-medium">Export all</button>
+      <label for="importAgentFile" class="text-slate-300 hover:text-white text-sm font-medium cursor-pointer">Import JSON</label>
+      <input type="file" id="importAgentFile" accept=".json,application/json" class="hidden" />
+      <button id="deleteAgentBtn" class="text-red-400 hover:text-red-300 text-sm font-medium hidden">Delete agent</button>
+    <div class="border-t border-slate-700 mt-4 pt-4">
+      <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+        <input type="checkbox" id="agentShareToggle" class="accent-emerald-500 w-4 h-4">
+        <span>Share this agent publicly (read-only profile page)</span>
+      </label>
+      <div id="agentShareLink" class="hidden mt-2 text-xs font-mono text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 rounded p-2 break-all"></div>
+    </div>
+      <div class="flex gap-2 ml-auto">
+        <button class="modal-close px-4 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800" data-modal="agentModal">Cancel</button>
+        <button id="saveAgentBtn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-5 py-2 rounded-lg text-sm">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Settings modal -->
+<div id="settingsModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-lg p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold">LLM Settings</h3>
+      <button class="modal-close text-slate-400 hover:text-white p-1" data-modal="settingsModal">&times;</button>
+    </div>
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-1">API Base URL</label>
+        <input id="cfgBaseURL" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500" placeholder="https://api.openai.com/v1" />
+        <p class="text-xs text-slate-500 mt-1">Any OpenAI-compatible endpoint: OpenAI, OpenRouter, Groq, Together, or local Ollama (<span class="font-mono">http://localhost:11434/v1</span>).</p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-1">API Key</label>
+        <input id="cfgApiKey" type="password" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500" placeholder="sk-..." />
+        <p class="text-xs text-slate-500 mt-1">Stored locally on your server in <span class="font-mono">data/config.json</span>. For Ollama use any string, e.g. <span class="font-mono">ollama</span>.</p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-1">Default model</label>
+        <input id="cfgModel" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500" placeholder="gpt-4o-mini" />
+      </div>
+    </div>
+    <div class="border-t border-slate-700 mt-5 pt-4">
+      <div class="text-sm font-semibold mb-2">Usage (last 30 days)</div>
+      <div id="usagePanel" class="text-xs text-slate-400">Loading…</div>
+    </div>
+    <div class="border-t border-slate-700 mt-5 pt-4">
+      <div class="flex justify-between items-center mb-2">
+        <div class="text-sm font-semibold">API keys <span class="text-slate-500 font-normal">— for /v1 API access</span></div>
+        <button id="createApiKeyBtn" class="text-xs bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-2.5 py-1 rounded">Create key</button>
+      </div>
+      <div id="newApiKeyDisplay" class="hidden mb-2 p-2.5 bg-emerald-500/10 border border-emerald-500/40 rounded text-xs font-mono text-emerald-300 break-all"></div>
+      <div id="apiKeyList" class="text-xs text-slate-400 space-y-1.5">Loading…</div>
+    </div>
+    <div class="border-t border-slate-700 mt-5 pt-4">
+      <div class="text-sm font-semibold mb-2">Data &amp; account</div>
+      <div class="flex flex-wrap gap-2">
+        <button id="exportDataBtn" class="text-xs border border-slate-600 hover:border-slate-400 text-slate-300 px-3 py-1.5 rounded transition">Export my data (JSON)</button>
+        <button id="deleteAccountBtn" class="text-xs border border-red-500/50 text-red-400 hover:bg-red-500/10 px-3 py-1.5 rounded transition">Delete account</button>
+      </div>
+    </div>
+    <div id="adminSection" class="hidden border-t border-slate-700 mt-5 pt-4">
+      <div class="text-sm font-semibold mb-2">Admin — users</div>
+      <div id="adminUserList" class="text-xs text-slate-400 max-h-48 overflow-y-auto space-y-1.5">Loading…</div>
+    </div>
+    <div class="border-t border-slate-700 mt-5 pt-4">
+      <div class="text-sm font-semibold mb-2">Security — change password</div>
+      <div class="grid grid-cols-1 gap-2">
+        <input id="pwOld" type="password" placeholder="Current password" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-emerald-500" />
+        <input id="pwNew" type="password" placeholder="New password (min 6 chars)" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-emerald-500" />
+        <input id="pwConfirm" type="password" placeholder="Confirm new password" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-emerald-500" />
+        <button id="changePwBtn" class="text-xs bg-slate-700 hover:bg-slate-600 text-slate-100 px-3 py-1.5 rounded-lg transition justify-self-start">Update password</button>
+        <button id="revokeSessionsBtn" class="text-xs border border-slate-600 hover:border-slate-400 text-slate-300 px-3 py-1.5 rounded-lg transition justify-self-start">Log out all other sessions</button>
+        <button id="changeEmailBtn" class="text-xs border border-slate-600 hover:border-slate-400 text-slate-300 px-3 py-1.5 rounded-lg transition justify-self-start">Change email</button>
+      </div>
+    </div>
+    <div class="flex justify-end gap-2 mt-6">
+      <button class="modal-close px-4 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800" data-modal="settingsModal">Cancel</button>
+      <button id="saveSettingsBtn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-5 py-2 rounded-lg text-sm">Save</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 bg-red-500/90 text-white text-sm px-4 py-2 rounded-lg z-50 shadow-lg"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

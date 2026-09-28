@@ -1,0 +1,22 @@
+services:
+  agent-studio:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - APP_URL=http://localhost:3000
+      # - STRIPE_SECRET_KEY=sk_live_...
+      # - STRIPE_PRICE_ID=price_...
+      # - STRIPE_WEBHOOK_SECRET=whsec_...
+      # - SMTP_HOST=...
+      # - ADMIN_EMAILS=admin@example.com
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/healthz', r => process.exit(r.statusCode===200?0:1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

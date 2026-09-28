@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Agent Studio — Create & Run Multiple AI Agents</title>
+<meta name="description" content="Build custom AI agents, chain them into crews, and automate research, writing, and review. Free to start." />
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
+  .gradient-text { background: linear-gradient(135deg, #34d399, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body class="bg-slate-950 text-slate-100 antialiased">
+
+<!-- Nav -->
+<nav class="fixed top-0 inset-x-0 z-50 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur">
+  <div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
+    <a href="#" class="flex items-center gap-2.5">
+      <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#022c22" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6l-8-4z"/></svg>
+      </div>
+      <span class="font-semibold tracking-tight">Agent Studio</span>
+    </a>
+    <div class="hidden md:flex items-center gap-7 text-sm text-slate-400">
+      <a href="#features" class="hover:text-white transition">Features</a>
+      <a href="#pricing" class="hover:text-white transition">Pricing</a>
+      <a href="#faq" class="hover:text-white transition">FAQ</a>
+    </div>
+    <div class="flex items-center gap-2">
+      <a href="/app" class="text-sm text-slate-300 hover:text-white px-3 py-2 transition">Log in</a>
+      <a href="/app?signup=1" class="text-sm bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-4 py-2 rounded-lg transition">Get started free</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="pt-32 pb-20 px-5">
+  <div class="max-w-4xl mx-auto text-center">
+    <div class="inline-flex items-center gap-2 text-xs font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 rounded-full px-3 py-1 mb-6">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+      Multi-agent AI, in your browser
+    </div>
+    <h1 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight mb-5">
+      Create &amp; run <span class="gradient-text">multiple AI agents</span><br class="hidden md:block" /> that work together.
+    </h1>
+    <p class="text-lg text-slate-400 max-w-2xl mx-auto mb-8">
+      Design custom agents with their own prompts and models, then chain them into crews — researchers, writers, critics — that build on each other's work in rounds.
+    </p>
+    <div class="flex items-center justify-center gap-3">
+      <a href="/app?signup=1" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-6 py-3 rounded-xl transition">Start building free</a>
+      <a href="#pricing" class="border border-slate-700 hover:border-slate-500 px-6 py-3 rounded-xl text-sm font-medium transition">See pricing</a>
+    </div>
+    <p class="text-xs text-slate-500 mt-4">No credit card required · Free tier includes 3 agents</p>
+  </div>
+</section>
+
+<!-- Features -->
+<section id="features" class="py-20 px-5 border-t border-slate-800/60">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-3xl font-bold text-center mb-3">Everything you need to ship with agents</h2>
+    <p class="text-slate-400 text-center mb-12 max-w-xl mx-auto">From a single agent to a full crew — with accounts, billing, and per-user isolation built in.</p>
+    <div class="grid md:grid-cols-3 gap-5">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-emerald-500/40 transition">
+        <div class="w-10 h-10 rounded-lg bg-emerald-500/15 flex items-center justify-center mb-4">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4M8 16h.01M16 16h.01"/></svg>
+        </div>
+        <h3 class="font-semibold mb-2">Custom agents</h3>
+        <p class="text-sm text-slate-400">Name, system prompt, model, and temperature per agent. Works with any OpenAI-compatible LLM — OpenAI, Groq, OpenRouter, Ollama.</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-emerald-500/40 transition">
+        <div class="w-10 h-10 rounded-lg bg-emerald-500/15 flex items-center justify-center mb-4">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3 class="font-semibold mb-2">Crew runs</h3>
+        <p class="text-sm text-slate-400">Select multiple agents, set rounds, and they work the same task in sequence — each sees every previous response. Perfect for research → draft → review loops.</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-emerald-500/40 transition">
+        <div class="w-10 h-10 rounded-lg bg-emerald-500/15 flex items-center justify-center mb-4">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <h3 class="font-semibold mb-2">Streaming &amp; history</h3>
+        <p class="text-sm text-slate-400">Token-by-token streaming replies. Full conversation history per agent, saved crew runs, and one-click replay.</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-emerald-500/40 transition">
+        <div class="w-10 h-10 rounded-lg bg-emerald-500/15 flex items-center justify-center mb-4">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h3 class="font-semibold mb-2">Accounts &amp; isolation</h3>
+        <p class="text-sm text-slate-400">Signup/login with hashed passwords. Every user's agents, chats, and LLM keys are fully isolated — never visible to others.</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-emerald-500/40 transition">
+        <div class="w-10 h-10 rounded-lg bg-emerald-500/15 flex items-center justify-center mb-4">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+        </div>
+        <h3 class="font-semibold mb-2">Built-in billing</h3>
+        <p class="text-sm text-slate-400">Stripe Checkout + webhooks ready. Free/Pro/Enterprise tiers with daily quotas that auto-reset. Upgrade in one click.</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 hover:border-emerald-500/40 transition">
+        <div class="w-10 h-10 rounded-lg bg-emerald-500/15 flex items-center justify-center mb-4">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </div>
+        <h3 class="font-semibold mb-2">Self-host ready</h3>
+        <p class="text-sm text-slate-400">Single Node.js process, JSON storage, Docker-ready. Bring your own LLM keys — we never mark up token costs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section id="pricing" class="py-20 px-5 border-t border-slate-800/60">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-3xl font-bold text-center mb-3">Simple, transparent pricing</h2>
+    <p class="text-slate-400 text-center mb-12">Start free. Upgrade when you need more.</p>
+    <div id="pricingGrid" class="grid md:grid-cols-3 gap-5">
+      <div class="text-center text-slate-500 col-span-3 py-8">Loading pricing…</div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="py-20 px-5 border-t border-slate-800/60">
+  <div class="max-w-3xl mx-auto">
+    <h2 class="text-3xl font-bold text-center mb-10">Frequently asked questions</h2>
+    <div class="space-y-3">
+      <details class="bg-slate-900 border border-slate-800 rounded-xl px-5 py-4 group">
+        <summary class="font-medium cursor-pointer list-none flex justify-between items-center">Which LLMs can I use?<span class="text-emerald-400 group-open:rotate-45 transition">+</span></summary>
+        <p class="text-sm text-slate-400 mt-3">Any OpenAI-compatible endpoint: OpenAI, Groq, OpenRouter, Together, or a local model via Ollama. You bring your own API key in Settings.</p>
+      </details>
+      <details class="bg-slate-900 border border-slate-800 rounded-xl px-5 py-4 group">
+        <summary class="font-medium cursor-pointer list-none flex justify-between items-center">What is a crew run?<span class="text-emerald-400 group-open:rotate-45 transition">+</span></summary>
+        <p class="text-sm text-slate-400 mt-3">A crew run lets several agents work the same task in sequence. Each agent sees all previous responses, so you can build research → write → critique loops automatically.</p>
+      </details>
+      <details class="bg-slate-900 border border-slate-800 rounded-xl px-5 py-4 group">
+        <summary class="font-medium cursor-pointer list-none flex justify-between items-center">Do my LLM keys stay private?<span class="text-emerald-400 group-open:rotate-45 transition">+</span></summary>
+        <p class="text-sm text-slate-400 mt-3">Yes. Each user's LLM configuration is stored per-account and never shared. If you self-host, everything stays on your server.</p>
+      </details>
+      <details class="bg-slate-900 border border-slate-800 rounded-xl px-5 py-4 group">
+        <summary class="font-medium cursor-pointer list-none flex justify-between items-center">Can I self-host this?<span class="text-emerald-400 group-open:rotate-45 transition">+</span></summary>
+        <p class="text-sm text-slate-400 mt-3">Absolutely. It's a single Node.js app with no database required. Set your Stripe keys to enable paid upgrades, or leave them out and run it free-only.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="py-20 px-5 border-t border-slate-800/60">
+  <div class="max-w-3xl mx-auto text-center bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border border-emerald-500/30 rounded-3xl p-12">
+    <h2 class="text-3xl font-bold mb-3">Start building with agents today</h2>
+    <p class="text-slate-400 mb-7">Free forever for up to 3 agents. No credit card.</p>
+<!-- How it works -->
+<section class="max-w-5xl mx-auto px-5 py-16">
+  <h2 class="text-3xl font-bold text-center mb-3">From idea to production in three steps</h2>
+  <p class="text-slate-400 text-center mb-12 max-w-xl mx-auto">No code, no infrastructure, no lock-in. Bring your own model keys and you're live in minutes.</p>
+  <div class="grid md:grid-cols-3 gap-6">
+    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
+      <div class="w-10 h-10 rounded-full bg-emerald-500/15 text-emerald-400 font-bold flex items-center justify-center mb-4">1</div>
+      <h3 class="font-semibold mb-2">Connect your model</h3>
+      <p class="text-sm text-slate-400">Paste an API key from OpenAI, Anthropic, Gemini, Groq, DeepSeek, or run local models with Ollama.</p>
+    </div>
+    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
+      <div class="w-10 h-10 rounded-full bg-emerald-500/15 text-emerald-400 font-bold flex items-center justify-center mb-4">2</div>
+      <h3 class="font-semibold mb-2">Build your agents</h3>
+      <p class="text-sm text-slate-400">Define a system prompt, pick a model, and assemble multi-agent crews that work in rounds.</p>
+    </div>
+    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
+      <div class="w-10 h-10 rounded-full bg-emerald-500/15 text-emerald-400 font-bold flex items-center justify-center mb-4">3</div>
+      <h3 class="font-semibold mb-2">Share &amp; scale</h3>
+      <p class="text-sm text-slate-400">Invite your team, publish agents publicly, export data anytime, and upgrade when you grow.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="max-w-5xl mx-auto px-5 py-16 border-t border-slate-800/60">
+  <h2 class="text-3xl font-bold text-center mb-12">Loved by builders and teams</h2>
+  <div class="grid md:grid-cols-3 gap-6">
+    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
+      <p class="text-sm text-slate-300 mb-4">"Replaced three separate tools with one self-hosted platform. My team collaborates on agents and I control the billing."</p>
+      <div class="text-xs text-slate-500">— Solo founder, analytics startup</div>
+    </div>
+    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
+      <p class="text-sm text-slate-300 mb-4">"Crew mode alone is worth it — research, write, and critique agents hand off work automatically."</p>
+      <div class="text-xs text-slate-500">— Content studio lead</div>
+    </div>
+    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
+      <p class="text-sm text-slate-300 mb-4">"Owns my data, runs on my server, and the API keys let me embed agents into my own product."</p>
+      <div class="text-xs text-slate-500">— Independent developer</div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="max-w-3xl mx-auto px-5 py-20 text-center border-t border-slate-800/60">
+  <h2 class="text-3xl md:text-4xl font-bold mb-4">Start building with your team today</h2>
+  <p class="text-slate-400 mb-8">Free tier includes 3 agents, 20 requests/day, and full workspaces. No credit card required.</p>
+    <a href="/app?signup=1" class="inline-block bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-7 py-3 rounded-xl transition">Get started free</a>
+  </div>
+</section>
+
+<footer class="border-t border-slate-800/60 py-8 px-5 text-center text-xs text-slate-500">
+  <p>Agent Studio · Self-hostable multi-agent platform</p>
+</footer>
+
+<script>
+// Load live pricing from /api/tiers (public endpoint)
+(async function () {
+  const grid = document.getElementById('pricingGrid');
+  try {
+    const tiers = await fetch('/api/tiers').then(r => r.json());
+    grid.innerHTML = '';
+    for (const t of tiers) {
+      const featured = t.id === 'pro';
+      const price = t.priceMonthly === null ? 'Custom' : '$' + t.priceMonthly + '<span class="text-sm font-normal text-slate-400">/mo</span>';
+      const cta = t.priceMonthly === null
+        ? '<a href="mailto:sales@example.com" class="block w-full text-center border border-slate-600 hover:border-slate-400 py-2.5 rounded-lg text-sm font-medium transition">Contact sales</a>'
+        : `<a href="/app?signup=1" class="block w-full text-center ${featured ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950' : 'border border-slate-600 hover:border-slate-400'} py-2.5 rounded-lg text-sm font-semibold transition">${t.priceMonthly === 0 ? 'Start free' : 'Upgrade to ' + t.name}</a>`;
+      const features = (t.features || []).map(f =>
+        `<li class="flex items-start gap-2 text-sm text-slate-300"><svg class="w-4 h-4 mt-0.5 shrink-0 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>${f}</li>`
+      ).join('');
+      const card = document.createElement('div');
+      card.className = 'rounded-2xl p-6 border ' + (featured ? 'bg-emerald-500/10 border-emerald-500/50 relative' : 'bg-slate-900 border-slate-800');
+      card.innerHTML = `
+        ${featured ? '<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-slate-950 text-xs font-bold px-3 py-1 rounded-full">MOST POPULAR</div>' : ''}
+        <h3 class="font-semibold text-lg">${t.name}</h3>
+        <div class="text-3xl font-bold mt-2 mb-1">${price}</div>
+        <p class="text-xs text-slate-500 mb-5">${t.dailyRequests.toLocaleString()} requests/day · ${t.maxAgents} agents · ${t.maxCrewRounds} crew rounds</p>
+        <ul class="space-y-2.5 mb-6">${features}</ul>
+        ${cta}
+      `;
+      grid.appendChild(card);
+    }
+  } catch {
+    grid.innerHTML = '<div class="text-center text-slate-500 col-span-3 py-8">Pricing unavailable — <a href="/app" class="text-emerald-400 underline">open the app</a>.</div>';
+  }
+})();
+</script>
+</body>
+</html>
