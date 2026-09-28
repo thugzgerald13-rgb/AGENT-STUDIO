@@ -1,16 +1,33 @@
 {
-  "version": 2,
   "buildCommand": "npm install",
   "installCommand": "npm install",
   "framework": null,
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/[...all]" },
-    { "source": "/v1/(.*)", "destination": "/api/[...all]" },
-    { "source": "/webhook/(.*)", "destination": "/api/[...all]" },
-    { "source": "/s/(.*)", "destination": "/api/[...all]" },
-    { "source": "/(.*)", "destination": "/public/$1" }
-  ],
+  "nodeVersion": "20.x",
   "functions": {
-    "api/[...all].js": { "maxDuration": 60 }
-  }
+    "api/**/*.js": {
+      "maxDuration": 60
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/[...all].js"
+    },
+    {
+      "source": "/v1/(.*)",
+      "destination": "/api/[...all].js"
+    },
+    {
+      "source": "/webhook/(.*)",
+      "destination": "/api/[...all].js"
+    },
+    {
+      "source": "/s/(.*)",
+      "destination": "/api/[...all].js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/api/[...all].js"
+    }
+  ]
 }
