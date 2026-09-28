@@ -1,6 +1,5 @@
 {
   "framework": null,
-  "nodeVersion": "24.x",
   "functions": {
     "api/**/*.js": {
       "maxDuration": 60
