@@ -678,3 +678,11 @@ if (require.main === module) {
   });
 }
 module.exports = app;
+
+// Start server only locally, not on Vercel
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3137;
+  app.listen(PORT, () => {
+    console.log(`🚀 Agent Studio running on port ${PORT}`);
+  });
+}
