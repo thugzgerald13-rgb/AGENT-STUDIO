@@ -672,17 +672,12 @@ app.patch('/api/agents/:id/pin', (req, res) => {
   res.json({ ok: true, pinned: a.pinned });
 });
 
+// Listen only when run directly (local / Docker / any non-serverless host).
+// On Vercel, server.js is require()d by api/[...all].js, so require.main !==
+// module and we must NOT call app.listen — the platform invokes app(req,res).
 if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`Agent Studio running at http://localhost:${PORT}`);
   });
 }
 module.exports = app;
-
-// Start server only locally, not on Vercel
-if (process.env.NODE_ENV !== 'production') {
-  const PORT = process.env.PORT || 3137;
-  app.listen(PORT, () => {
-    console.log(`🚀 Agent Studio running on port ${PORT}`);
-  });
-}
